@@ -1,0 +1,32 @@
+<div class="dashboard-grid">
+  <section class="stats-row">
+    @for (item of stats(); track item.label) {
+      <div class="card" [class]="item.color">
+        <span class="label">{{ item.label }}</span>
+        <h2 class="value">{{ item.value }}</h2>
+      </div>
+    }
+  </section>
+
+  <section class="content-card">
+    <h3>Recent Activity</h3>
+    <table class="modern-table">
+      <thead>
+        <tr>
+          <th>Task</th>
+          <th>Time</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (act of activities(); track act.id) {
+          <tr>
+            <td>{{ act.task }}</td>
+            <td>{{ act.time }}</td>
+            <td><span class="status-pill">{{ act.status }}</span></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </section>
+</div>
