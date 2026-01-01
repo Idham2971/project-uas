@@ -1,32 +1,56 @@
-<div class="dashboard-grid">
-  <section class="stats-row">
-    @for (item of stats(); track item.label) {
+<div class="dashboard-container">
+  <!-- Header dengan user info dan logout -->
+  <header class="dashboard-header">
+    <div class="header-left">
+      <h1>Dashboard</h1>
+      <p class="welcome-text">Selamat datang, {{ getCurrentUser()?.username || 'Pengguna' }}</p>
+    </div>
+    <div class="header-right">
+      <div class="user-info">
+        <span class="user-role">{{
+          getCurrentUser()?.role === 'admin' ? 'Administrator' : 'User'
+        }}</span>
+        <button class="logout-btn" (click)="logout()">
+          <span class="logout-icon">🚪</span>
+          Logout
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Konten dashboard yang sudah ada -->
+  <div class="dashboard-grid">
+    <section class="stats-row">
+      @for (item of stats(); track item.label) {
       <div class="card" [class]="item.color">
         <span class="label">{{ item.label }}</span>
         <h2 class="value">{{ item.value }}</h2>
       </div>
-    }
-  </section>
+      }
+    </section>
 
-  <section class="content-card">
-    <h3>Recent Activity</h3>
-    <table class="modern-table">
-      <thead>
-        <tr>
-          <th>Task</th>
-          <th>Time</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (act of activities(); track act.id) {
+    <section class="content-card">
+      <h3>Recent Activity</h3>
+      <table class="modern-table">
+        <thead>
+          <tr>
+            <th>Task</th>
+            <th>Time</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (act of activities(); track act.id) {
           <tr>
             <td>{{ act.task }}</td>
             <td>{{ act.time }}</td>
-            <td><span class="status-pill">{{ act.status }}</span></td>
+            <td>
+              <span class="status-pill">{{ act.status }}</span>
+            </td>
           </tr>
-        }
-      </tbody>
-    </table>
-  </section>
+          }
+        </tbody>
+      </table>
+    </section>
+  </div>
 </div>
