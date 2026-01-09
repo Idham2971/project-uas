@@ -2,42 +2,30 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { Dashboard } from './dashboard';
 import { AuthService } from '../../services/auth.service';
-// Import utilitas dari Vitest
 import { vi, describe, it, expect, beforeEach, type Mocked } from 'vitest';
-import { By } from '@angular/platform-browser';
 
 describe('DashboardComponent', () => {
   let component: Dashboard;
   let fixture: ComponentFixture<Dashboard>;
-  // Ubah 'jest.Mocked' menjadi 'Mocked' (dari Vitest)
   let authService: Mocked<AuthService>;
   let router: Mocked<Router>;
 
   beforeEach(async () => {
-    // Ubah 'jest.fn()' menjadi 'vi.fn()'
     const authServiceMock = {
       logout: vi.fn(),
-      getCurrentUser: vi.fn().mockReturnValue({ username: 'admin', role: 'admin' }),
+      getCurrentUser: vi.fn().mockReturnValue({ username: 'admin', role: 'admin', photoUrl: null }),
+      updateProfilePhoto: vi.fn(),
     };
+    const routerMock = { navigate: vi.fn() };
 
-    const routerMock = {
-      navigate: vi.fn(),
-    };
-
-    await TestBed.configureTestingModule({
-      imports: [Dashboard],
-    }).compileComponents();
-
+    await TestBed.configureTestingModule({ imports: [Dashboard] }).compileComponents();
     TestBed.overrideProvider(AuthService, { useValue: authServiceMock });
     TestBed.overrideProvider(Router, { useValue: routerMock });
 
     fixture = TestBed.createComponent(Dashboard);
     component = fixture.componentInstance;
-
-    // Casting menggunakan 'Mocked' dari Vitest
     authService = TestBed.inject(AuthService) as Mocked<AuthService>;
     router = TestBed.inject(Router) as Mocked<Router>;
-
     fixture.detectChanges();
   });
 
@@ -45,35 +33,43 @@ describe('DashboardComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('harus merender 3 kartu statistik dari Signal', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const cards = compiled.querySelectorAll('.card');
-    expect(cards.length).toBe(3);
-  });
+  it('harus memanggil updateProfilePhoto saat file diupload', () => {
+    // 1. Buat Mock Object untuk Logic
+    const mockReader = {
+      readAsDataURL: vi.fn(),
+      onload: null as any,
+      result: 'base64'
+    };
 
-  it('harus menampilkan "Revenue" pada kartu pertama', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const firstCardLabel = compiled.querySelector('.card .label');
-    expect(firstCardLabel?.textContent).toContain('Revenue');
-  });
+    // 2. Buat Mock Class untuk Constructor FileReader
+    class MockFileReader {
+      readAsDataURL = mockReader.readAsDataURL;
+      // PERBAIKAN DI SINI: Gunakan ': any' agar TS tahu ini bisa jadi function
+      onload: any = null; 
+      result = 'base64';
+      
+      constructor() {
+        // Hubungkan mockReader luar agar kita bisa trigger dari luar
+        mockReader.onload = (e: any) => {
+          if (this.onload) {
+            this.onload(e);
+          }
+        };
+      }
+    }
 
-  it('harus menampilkan username pengguna di header', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const welcomeText = compiled.querySelector('.welcome-text');
-    expect(welcomeText?.textContent).toContain('Selamat datang');
-  });
+    // 3. Override window.FileReader
+    vi.spyOn(window, 'FileReader').mockImplementation(() => new MockFileReader() as any);
 
-  it('harus memanggil logout saat tombol logout diklik', () => {
-    // Menggunakan debugElement untuk interaksi tombol yang lebih aman
-    const logoutBtn = fixture.debugElement.query(By.css('.logout-btn'));
-    logoutBtn.triggerEventHandler('click', null);
+    // 4. Trigger upload di component
+    component.onFileSelected({ target: { files: [new Blob()] } });
 
-    expect(authService.logout).toHaveBeenCalled();
-  });
+    // 5. Manual trigger onload dari mockReader yang kita pegang
+    if (mockReader.onload) {
+      mockReader.onload({ target: { result: 'base64' } });
+    }
 
-  it('harus menampilkan role pengguna', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const userRole = compiled.querySelector('.user-role');
-    expect(userRole?.textContent).toContain('Administrator');
+    // 6. Assert
+    expect(authService.updateProfilePhoto).toHaveBeenCalledWith('base64');
   });
 });

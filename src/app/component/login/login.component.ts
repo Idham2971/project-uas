@@ -21,11 +21,8 @@ export class LoginComponent {
       alert('Username dan password harus diisi!');
       return;
     }
-
     const success = this.authService.login(this.username, this.password);
-
     if (success) {
-      console.log('Login berhasil');
       this.router.navigate(['/dashboard']);
     } else {
       alert('Login gagal! Username atau password salah.');

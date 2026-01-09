@@ -1,131 +1,41 @@
-/* src/app/components/dashboard/dashboard.css */
-.dashboard-container {
-  min-height: 100vh;
-  background: #f8fafc;
-}
+.dashboard-container { min-height: 100vh; background: #f8fafc; }
 
 .dashboard-header {
-  background: white;
-  padding: 20px 24px;
-  border-bottom: 1px solid #e2e8f0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  background: white; padding: 20px 24px; border-bottom: 1px solid #e2e8f0;
+  display: flex; justify-content: space-between; align-items: center;
   box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
 }
 
-.header-left h1 {
-  margin: 0;
-  color: #1e293b;
-  font-size: 1.875rem;
-  font-weight: 700;
-}
+.header-left h1 { margin: 0; color: #1e293b; font-size: 1.875rem; font-weight: 700; }
+.welcome-text { margin: 4px 0 0; color: #64748b; font-size: 0.875rem; }
+.header-right .user-info { display: flex; align-items: center; gap: 16px; }
 
-.welcome-text {
-  margin: 4px 0 0;
-  color: #64748b;
-  font-size: 0.875rem;
+/* Profile Picture */
+.profile-section { position: relative; cursor: pointer; display: flex; align-items: center; }
+.profile-img {
+  width: 40px; height: 40px; border-radius: 50%; object-fit: cover;
+  border: 2px solid #e2e8f0; transition: border-color 0.2s;
 }
+.profile-img:hover { border-color: #4f46e5; }
 
-.header-right .user-info {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.user-role {
-  background: #f1f5f9;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 0.875rem;
-  color: #475569;
-  font-weight: 500;
-}
-
+.user-role { background: #f1f5f9; padding: 6px 12px; border-radius: 20px; font-size: 0.875rem; color: #475569; font-weight: 500; }
 .logout-btn {
-  background: #ef4444;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: background-color 0.2s;
+  background: #ef4444; color: white; border: none; padding: 8px 16px;
+  border-radius: 8px; font-size: 0.875rem; font-weight: 500; cursor: pointer;
+  display: flex; align-items: center; gap: 8px;
 }
+.logout-btn:hover { background: #dc2626; }
 
-.logout-btn:hover {
-  background: #dc2626;
-}
+.dashboard-grid { display: flex; flex-direction: column; gap: 24px; padding: 24px; }
+.stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+.card { padding: 20px; border-radius: 16px; color: white; transition: transform 0.2s; }
+.card:hover { transform: translateY(-5px); }
+.blue { background: #4f46e5; }
+.green { background: #10b981; }
+.orange { background: #f59e0b; }
 
-.logout-icon {
-  font-size: 1rem;
-}
-
-.dashboard-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  padding: 24px;
-}
-
-.stats-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-}
-
-.card {
-  padding: 20px;
-  border-radius: 16px;
-  color: white;
-  transition: transform 0.2s;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-}
-.blue {
-  background: #4f46e5;
-}
-.green {
-  background: #10b981;
-}
-.orange {
-  background: #f59e0b;
-}
-
-.content-card {
-  background: white;
-  padding: 24px;
-  border-radius: 16px;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-}
-
-.modern-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 16px;
-}
-
-.modern-table th {
-  text-align: left;
-  color: #64748b;
-  padding: 12px;
-  border-bottom: 1px solid #f1f5f9;
-}
-
-.modern-table td {
-  padding: 12px;
-  border-bottom: 1px solid #f1f5f9;
-}
-
-.status-pill {
-  background: #f1f5f9;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-}
+.content-card { background: white; padding: 24px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+.modern-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+.modern-table th { text-align: left; color: #64748b; padding: 12px; border-bottom: 1px solid #f1f5f9; }
+.modern-table td { padding: 12px; border-bottom: 1px solid #f1f5f9; }
+.status-pill { background: #f1f5f9; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; }
