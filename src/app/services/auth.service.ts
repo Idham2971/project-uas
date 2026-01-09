@@ -9,51 +9,57 @@ export class AuthService {
 
   constructor() {}
 
-  // Mendaftarkan user baru
   register(username: string, pass: string): boolean {
     const users = this.getUsers();
-
-    // Cek apakah username sudah ada
     if (users.some((u: any) => u.username === username)) {
       return false;
     }
-
-    // Tambah user baru (default role: user)
-    const newUser = { username, password: pass, role: 'user' };
+    // Tambah user baru dengan field photoUrl default null
+    const newUser = { username, password: pass, role: 'user', photoUrl: null }; 
     users.push(newUser);
     localStorage.setItem(this.usersKey, JSON.stringify(users));
     return true;
   }
 
-  // Melakukan login
   login(username: string, pass: string): boolean {
     const users = this.getUsers();
-
-    // Cari user yang cocok
     const user = users.find((u: any) => u.username === username && u.password === pass);
-
     if (user) {
-      // Simpan sesi login
       localStorage.setItem(this.currentUserKey, JSON.stringify(user));
       return true;
     }
     return false;
   }
 
-  // Logout
   logout() {
     localStorage.removeItem(this.currentUserKey);
   }
 
-  // Ambil data user yang sedang login
   getCurrentUser() {
     const userStr = localStorage.getItem(this.currentUserKey);
     return userStr ? JSON.parse(userStr) : null;
   }
 
-  // Helper: Ambil semua user terdaftar (untuk debug/cek)
   getUsers() {
     const usersStr = localStorage.getItem(this.usersKey);
     return usersStr ? JSON.parse(usersStr) : [];
+  }
+
+  // Update foto profil (Base64)
+  updateProfilePhoto(photoBase64: string): void {
+    const currentUser = this.getCurrentUser();
+    if (currentUser) {
+      // 1. Update sesi saat ini
+      currentUser.photoUrl = photoBase64;
+      localStorage.setItem(this.currentUserKey, JSON.stringify(currentUser));
+
+      // 2. Update database permanen
+      const users = this.getUsers();
+      const userIndex = users.findIndex((u: any) => u.username === currentUser.username);
+      if (userIndex !== -1) {
+        users[userIndex].photoUrl = photoBase64;
+        localStorage.setItem(this.usersKey, JSON.stringify(users));
+      }
+    }
   }
 }

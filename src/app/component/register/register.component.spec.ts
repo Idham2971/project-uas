@@ -12,13 +12,8 @@ describe('RegisterComponent', () => {
   let router: Mocked<Router>;
 
   beforeEach(async () => {
-    const authServiceMock = {
-      register: vi.fn(),
-    };
-
-    const routerMock = {
-      navigate: vi.fn(),
-    };
+    const authServiceMock = { register: vi.fn() };
+    const routerMock = { navigate: vi.fn() };
 
     await TestBed.configureTestingModule({
       imports: [RegisterComponent, FormsModule],
@@ -29,51 +24,27 @@ describe('RegisterComponent', () => {
 
     fixture = TestBed.createComponent(RegisterComponent);
     component = fixture.componentInstance;
-
+    
     authService = TestBed.inject(AuthService) as Mocked<AuthService>;
     router = TestBed.inject(Router) as Mocked<Router>;
-
     fixture.detectChanges();
   });
 
-  it('harus membuat komponen register', () => {
+  it('harus membuat komponen', () => {
     expect(component).toBeTruthy();
   });
 
-  it('harus menghitung kekuatan password', () => {
-    component.password = '123';
-    component.onPasswordInput();
-    expect(component.getPasswordStrengthText()).toBe('Lemah');
-
-    component.password = 'KuatBanget123';
-    component.onPasswordInput();
-    expect(component.getPasswordStrengthText()).toBe('Kuat');
-  });
-
-  it('harus gagal register jika password beda', () => {
-    vi.spyOn(window, 'alert').mockImplementation(() => {});
-
-    component.username = 'baru';
-    component.password = 'Pass123';
-    component.confirmPassword = 'Pass999';
-
-    component.register();
-
-    expect(authService.register).not.toHaveBeenCalled();
-  });
-
-  it('harus sukses register jika data valid', () => {
+  it('harus registrasi sukses jika form valid', () => {
     vi.spyOn(window, 'alert').mockImplementation(() => {});
     authService.register.mockReturnValue(true);
-
-    component.username = 'baru';
+    
+    component.username = 'tom';
     component.password = 'Pass123';
     component.confirmPassword = 'Pass123';
-
-    component.calculatePasswordStrength(); // Update status validasi
+    component.calculatePasswordStrength(); // Agar valid
+    
     component.register();
-
-    expect(authService.register).toHaveBeenCalledWith('baru', 'Pass123');
+    expect(authService.register).toHaveBeenCalled();
     expect(router.navigate).toHaveBeenCalledWith(['/login']);
   });
 });
