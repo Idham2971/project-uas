@@ -1,0 +1,98 @@
+<nav class="custom-navbar">
+  <div class="nav-left">
+    <a routerLink="/dashboard" class="btn-dashboard">← Kembali</a>
+  </div>
+  <div class="nav-brand">Toko Kelontong Mas Amba</div>
+  <div class="nav-right">
+    <button class="cart-btn" (click)="toggleCart()">
+      🛒 Keranjang
+      <span class="badge" *ngIf="cartItems.length > 0">{{ cartItems.length }}</span>
+    </button>
+  </div>
+</nav>
+
+<div class="products-container">
+  <header class="page-header">
+    <h1>Belanja Sayur Harian</h1>
+    <p>Sayuran segar asli dari ngawi</p>
+  </header>
+
+  <div class="product-grid">
+    <div class="product-card" *ngFor="let item of products">
+      <div class="card-image">
+        <img [src]="item.image" [alt]="item.name" />
+        <span class="promo-tag">Segar</span>
+      </div>
+
+      <div class="card-content">
+        <div class="text-group">
+          <h3 class="product-name">{{ item.name }}</h3>
+          <p class="product-desc">{{ item.description }}</p>
+        </div>
+
+        <div class="price-row">
+          <span class="price-label">Harga /kg</span>
+          <span class="price-value">{{
+            item.price | currency : 'IDR' : 'symbol-narrow' : '1.0-0'
+          }}</span>
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <div class="qty-control">
+          <button (click)="decreaseQty(item)" [disabled]="item.qty <= 1">-</button>
+          <span>{{ item.qty }} kg</span>
+          <button (click)="increaseQty(item)">+</button>
+        </div>
+        <button class="btn-add" (click)="addToCart(item)">+ Keranjang</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cart-overlay" [class.open]="isCartOpen" (click)="toggleCart()"></div>
+<div class="cart-sidebar" [class.open]="isCartOpen">
+  <div class="cart-header">
+    <h2>Keranjang Belanja</h2>
+    <button class="close-btn" (click)="toggleCart()">×</button>
+  </div>
+
+  <div class="cart-items">
+    <div class="empty-msg" *ngIf="cartItems.length === 0">Belum ada sayuran di keranjang.</div>
+
+    <div class="cart-item" *ngFor="let item of cartItems">
+      <img [src]="item.image" class="item-thumb" />
+      <div class="item-info">
+        <h4>{{ item.name }}</h4>
+        <div class="item-meta">
+          <span
+            >{{ item.qty }} kg x
+            {{ item.price | currency : 'IDR' : 'symbol-narrow' : '1.0-0' }}</span
+          >
+        </div>
+      </div>
+      <div class="item-total">
+        {{ item.price * item.qty | currency : 'IDR' : 'symbol-narrow' : '1.0-0' }}
+      </div>
+    </div>
+  </div>
+
+  <div class="cart-footer" *ngIf="cartItems.length > 0">
+    <div class="total-row">
+      <span>Total Belanja</span>
+      <span class="total-val">{{ cartTotal | currency : 'IDR' : 'symbol-narrow' : '1.0-0' }}</span>
+    </div>
+    <button class="btn-checkout" (click)="checkout()">Bayar Sekarang</button>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="showSuccessModal">
+  <div class="modal-box">
+    <div class="success-icon">✓</div>
+
+    <h2>Pesanan Berhasil!</h2>
+    <p>Terima kasih sudah berbelanja sayur segar di SayurFresh. Pesanan akan segera dikirim.</p>
+
+    <button class="btn-ok" (click)="closeModal()">Mantap!</button>
+  </div>
+</div>
