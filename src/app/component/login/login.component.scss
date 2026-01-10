@@ -1,272 +1,212 @@
+/* Modern Login - Optimized for Mobile */
 .login-container {
   min-height: 100vh;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px; // Padding luar tipis
-  background: linear-gradient(
-      135deg,
-      rgba(102, 126, 234, 0.15) 0%,
-      rgba(118, 75, 162, 0.25) 50%,
-      rgba(235, 236, 240, 0.1) 100%
-    ),
-    url('https://media.istockphoto.com/id/1186937462/id/foto/asia-melayu-perempuan-pemilik-toko-rempah-rempah-menerima-keranjang-produk-dari-pelanggannya.jpg?s=612x612&w=0&k=20&c=al3bgaQnGG_6ON134zkCJNTdhdVNdhAMfYT_7MLbERc=')
-      center/cover;
+  padding: 16px;
+  /* Gradient Ungu Elegan */
+  background: radial-gradient(circle at top right, #764ba2 0%, #667eea 100%);
   position: relative;
-  overflow: hidden;
+  overflow-y: auto; /* Agar bisa discroll di HP kecil */
+
+  @media (max-width: 480px) {
+    align-items: flex-start; /* Mulai dari atas di HP */
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
 }
 
-.background-animation {
-  position: absolute;
+.background-overlay {
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  background: url('https://media.istockphoto.com/id/1186937462/id/foto/asia-melayu-perempuan-pemilik-toko-rempah-rempah-menerima-keranjang-produk-dari-pelanggannya.jpg?s=612x612&w=0&k=20&c=al3bgaQnGG_6ON134zkCJNTdhdVNdhAMfYT_7MLbERc=')
+    center/cover;
+  opacity: 0.1; /* Dibuat sangat tipis agar teks jelas */
+  z-index: 0;
   pointer-events: none;
-  // ...
+  filter: grayscale(100%);
 }
 
 .login-card {
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 16px; // Radius kecil
-  padding: 25px 20px; // SANGAT COMPACT
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  /* Glassmorphism dengan transparansi konsisten */
+  background: rgba(255, 255, 255, 0.85); /* Transparansi 85% */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
 
+  border-radius: 20px;
+  padding: 32px;
   width: 100%;
-  max-width: 340px; // LEBAR CARD DIKECILKAN LAGI
-  margin: 0 auto;
+  max-width: 360px; /* Ukuran pas untuk HP */
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  position: relative;
+  z-index: 10;
+  margin: auto;
 
-  animation: slideInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  transition: transform 0.3s ease;
-
-  &:hover {
-    transform: translateY(-3px);
+  @media (max-width: 480px) {
+    padding: 24px;
+    border-radius: 16px;
   }
 }
 
+/* Typography & Brand */
 .brand-section {
   text-align: center;
-  margin-bottom: 15px; // Jarak dikurangi
-  padding-bottom: 15px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  margin-bottom: 24px;
 
-  .store-logo {
+  .logo-icon {
+    font-size: 36px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
     margin-bottom: 8px;
-
-    .logo-icon {
-      font-size: 2rem; // Ukuran logo pas
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      -webkit-background-clip: text;
-      background-clip: text; // FIXED
-      -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-      animation: bounce 2s ease-in-out infinite;
-    }
+    display: inline-block;
   }
 
   .store-name {
-    font-size: 1.4rem; // Ukuran font pas
+    font-size: 20px;
     font-weight: 800;
-    color: #2c5530;
-    margin-bottom: 2px;
-    background: linear-gradient(135deg, #2c5530, #4a7c59);
-    -webkit-background-clip: text;
-    background-clip: text; // FIXED
-    -webkit-text-fill-color: transparent;
+    color: #2d3748;
+    margin: 0;
   }
 
   .store-tagline {
-    font-size: 0.75rem;
-    color: #666;
-    font-style: italic;
+    font-size: 12px;
+    color: #718096;
+    margin-top: 4px;
   }
 }
 
-.title {
-  text-align: center;
-  color: #333;
-  font-size: 1.5rem; // Compact
+.form-title {
+  font-size: 16px;
   font-weight: 700;
-  margin-bottom: 5px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  -webkit-background-clip: text;
-  background-clip: text; // FIXED
-  -webkit-text-fill-color: transparent;
-}
-
-.subtitle {
+  color: #2d3748;
   text-align: center;
-  color: #666;
-  margin-bottom: 20px; // Jarak ke form
-  font-size: 0.85rem;
-  font-weight: 400;
+  margin-bottom: 4px;
 }
 
-.login-form {
-  .form-group {
-    margin-bottom: 15px; // Form lebih rapat
+.form-subtitle {
+  font-size: 13px;
+  color: #718096;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Inputs */
+.input-group {
+  margin-bottom: 16px;
+
+  .input-with-icon {
     position: relative;
 
-    label {
-      display: block;
-      margin-bottom: 5px;
-      color: #555;
-      font-weight: 600;
-      font-size: 0.8rem;
-    }
-
-    .input-container {
-      position: relative;
-      display: flex;
-      align-items: center;
-
-      .input-icon {
-        position: absolute;
-        left: 12px;
-        font-size: 0.9rem;
-        z-index: 2;
-        color: #94a3b8;
-      }
+    .input-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #a0aec0;
+      font-size: 16px;
+      transition: color 0.3s;
+      z-index: 2;
     }
 
     .form-input {
       width: 100%;
-      padding: 10px 10px 10px 35px; // Padding input dikecilkan (Compact)
-      border: 1.5px solid #e8ecef;
-      border-radius: 10px;
-      font-size: 0.9rem;
-      transition: all 0.3s ease;
-      background: #f8fafc;
+      padding: 12px 12px 12px 42px;
+      border: 2px solid transparent;
+      border-radius: 12px;
+      background: rgba(241, 245, 249, 0.9); /* Sedikit transparan */
+      font-size: 14px;
+      transition: all 0.3s;
+      box-sizing: border-box;
 
       &:focus {
         outline: none;
+        background: rgba(255, 255, 255, 0.95);
         border-color: #667eea;
-        background: white;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
-
-        ~ .input-icon {
-          color: #667eea;
-        }
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
       }
 
-      &::placeholder {
-        color: #a0aec0;
-        font-size: 0.85rem;
+      &:focus + .input-icon {
+        color: #667eea;
       }
     }
   }
 }
 
+/* Button */
 .btn-login {
   width: 100%;
-  padding: 12px; // Tombol compact
-  border: none;
-  border-radius: 10px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
+  padding: 14px;
   background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: transform 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 8px 16px rgba(118, 75, 162, 0.3);
 
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
-  }
-
-  .btn-icon {
-    font-size: 1rem;
+  &:active {
+    transform: scale(0.98);
   }
 }
 
-.link {
-  color: #667eea;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 0.85rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-
-  &:hover {
-    color: #764ba2;
-  }
-}
-
-.text-center {
+/* Footer */
+.footer-links {
   text-align: center;
-}
-.mt-3 {
-  margin-top: 15px;
-}
+  margin-top: 20px;
+  font-size: 13px;
+  color: #718096;
 
-.demo-section {
-  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-  padding: 12px; // Demo section compact
-  border-radius: 10px;
-  margin-top: 15px;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-
-  .demo-header {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #555;
-    font-size: 0.8rem;
-  }
-
-  .demo-accounts {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-
-    .demo-account {
-      padding: 6px 10px;
-      background: white;
-      border-radius: 6px;
-      font-size: 0.75rem; // Font demo kecil
-      color: #666;
-      border: 1px solid rgba(0, 0, 0, 0.08);
+  .register-link {
+    color: #667eea;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
     }
   }
 }
 
-// Animasi
-@keyframes slideInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-@keyframes bounce {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-5px);
-  }
-}
+/* Demo Box */
+.demo-section {
+  margin-top: 20px;
+  background: rgba(248, 250, 252, 0.9); /* Transparan */
+  border: 1px dashed #cbd5e0;
+  border-radius: 10px;
+  padding: 12px;
 
-// Responsif Ekstrem
-@media (max-width: 360px) {
-  .login-card {
-    padding: 15px 12px;
-    max-width: 100%;
+  .demo-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    margin-bottom: 8px;
+    text-transform: uppercase;
   }
-  .title {
-    font-size: 1.3rem;
+
+  .demo-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    margin-bottom: 4px;
+    color: #475569;
+
+    .demo-credential {
+      font-family: monospace;
+      font-weight: 600;
+    }
   }
 }

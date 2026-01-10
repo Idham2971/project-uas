@@ -1,0 +1,94 @@
+<div class="profile-container">
+  <div class="profile-card">
+    <div class="profile-header">
+      <div class="photo-wrapper" (click)="fileInput.click()" title="Ganti Foto">
+        <img
+          [src]="user?.photoUrl || 'https://via.placeholder.com/150'"
+          class="profile-img-large"
+          alt="Profile Photo"
+        />
+        <div class="overlay">
+          <!-- Logo upload dengan panah yang lebih jelas -->
+          <div class="upload-icon">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="white"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            <span class="upload-text">Unggah</span>
+          </div>
+        </div>
+      </div>
+      <input
+        #fileInput
+        type="file"
+        (change)="onPhotoSelected($event)"
+        accept="image/*"
+        style="display: none"
+      />
+
+      <h2 class="username">{{ user?.username }}</h2>
+      <span class="role-badge">{{ user?.role | titlecase }}</span>
+    </div>
+
+    <hr class="divider" />
+
+    <div class="profile-details" *ngIf="!isEditing">
+      <div class="detail-item">
+        <label>Jenis Kelamin</label>
+        <p class="value">{{ user?.gender || '-' }}</p>
+      </div>
+
+      <div class="detail-item">
+        <label>Alamat</label>
+        <p class="value">{{ user?.address || 'Belum ada alamat' }}</p>
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn-edit" (click)="enableEdit()">Edit Profil</button>
+        <button class="btn-back" (click)="goBack()">Kembali ke Dashboard</button>
+      </div>
+    </div>
+
+    <div class="profile-form" *ngIf="isEditing">
+      <div class="form-group">
+        <label>Username (Tidak bisa diubah)</label>
+        <input type="text" [value]="user?.username" disabled class="form-input disabled" />
+      </div>
+
+      <div class="form-group">
+        <label>Jenis Kelamin</label>
+        <select [(ngModel)]="editData.gender" class="form-select">
+          <option value="" disabled>Pilih Jenis Kelamin</option>
+          <option value="Laki-laki">Laki-laki</option>
+          <option value="Perempuan">Perempuan</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Alamat Lengkap</label>
+        <textarea
+          [(ngModel)]="editData.address"
+          class="form-textarea"
+          rows="4"
+          placeholder="Masukkan alamat lengkap..."
+        ></textarea>
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn-save" (click)="saveProfile()">Simpan</button>
+        <button class="btn-cancel" (click)="cancelEdit()">Batal</button>
+      </div>
+    </div>
+  </div>
+</div>

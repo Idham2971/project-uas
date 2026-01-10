@@ -1,5 +1,14 @@
 import { Injectable } from '@angular/core';
 
+export interface User {
+  username: string;
+  password?: string;
+  role: string;
+  photoUrl?: string | null;
+  address?: string | null; // Field Baru
+  gender?: string | null; // Field Baru
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -9,51 +18,72 @@ export class AuthService {
 
   constructor() {}
 
-  // Mendaftarkan user baru
   register(username: string, pass: string): boolean {
     const users = this.getUsers();
-
-    // Cek apakah username sudah ada
-    if (users.some((u: any) => u.username === username)) {
+    if (users.some((u: User) => u.username === username)) {
       return false;
     }
-
-    // Tambah user baru (default role: user)
-    const newUser = { username, password: pass, role: 'user' };
+    // Inisialisasi user dengan field baru kosong
+    const newUser: User = {
+      username,
+      password: pass,
+      role: 'user',
+      photoUrl: null,
+      address: null,
+      gender: null,
+    };
     users.push(newUser);
     localStorage.setItem(this.usersKey, JSON.stringify(users));
     return true;
   }
 
-  // Melakukan login
   login(username: string, pass: string): boolean {
     const users = this.getUsers();
-
-    // Cari user yang cocok
-    const user = users.find((u: any) => u.username === username && u.password === pass);
-
+    const user = users.find((u: User) => u.username === username && u.password === pass);
     if (user) {
-      // Simpan sesi login
       localStorage.setItem(this.currentUserKey, JSON.stringify(user));
       return true;
     }
     return false;
   }
 
-  // Logout
   logout() {
     localStorage.removeItem(this.currentUserKey);
   }
 
-  // Ambil data user yang sedang login
-  getCurrentUser() {
+  getCurrentUser(): User | null {
     const userStr = localStorage.getItem(this.currentUserKey);
     return userStr ? JSON.parse(userStr) : null;
   }
 
-  // Helper: Ambil semua user terdaftar (untuk debug/cek)
-  getUsers() {
+  getUsers(): User[] {
     const usersStr = localStorage.getItem(this.usersKey);
     return usersStr ? JSON.parse(usersStr) : [];
+  }
+
+  // Method baru: Update Data Profil Lengkap
+  updateUserProfile(updatedData: Partial<User>): void {
+    const currentUser = this.getCurrentUser();
+    if (currentUser) {
+      // 1. Gabungkan data lama dengan data baru
+      const newUserState = { ...currentUser, ...updatedData };
+
+      // 2. Simpan di session (currentUser)
+      localStorage.setItem(this.currentUserKey, JSON.stringify(newUserState));
+
+      // 3. Simpan di database (users array)
+      const users = this.getUsers();
+      const userIndex = users.findIndex((u: User) => u.username === currentUser.username);
+      if (userIndex !== -1) {
+        // Kita merge juga di database agar password tidak hilang jika updatedData tidak bawa password
+        users[userIndex] = { ...users[userIndex], ...updatedData };
+        localStorage.setItem(this.usersKey, JSON.stringify(users));
+      }
+    }
+  }
+
+  // Method lama (bisa tetap dipakai atau diganti logicnya pakai updateUserProfile)
+  updateProfilePhoto(photoBase64: string): void {
+    this.updateUserProfile({ photoUrl: photoBase64 });
   }
 }

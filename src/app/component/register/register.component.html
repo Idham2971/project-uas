@@ -1,112 +1,114 @@
+<!-- components/register/register.component.html -->
 <div class="register-container">
-  <div class="background-animation">
-    <div class="floating-shape shape-1"></div>
-    <div class="floating-shape shape-2"></div>
-    <div class="floating-shape shape-3"></div>
-  </div>
+  <div class="background-overlay"></div>
 
   <div class="register-card fade-in-up">
+    <!-- Header Brand -->
     <div class="brand-section">
       <div class="store-logo">
         <div class="logo-icon">🛒</div>
       </div>
-      <div class="store-name">Toko Pak Baco</div>
-      <div class="store-tagline">Kios Sembako Khas Indonesia</div>
+      <h1 class="store-name">Toko Pak Baco</h1>
+      <p class="store-tagline">Kios Sembako Khas Indonesia</p>
     </div>
 
-    <h1 class="title">Buat akun di nggih</h1>
-    <p class="subtitle">Bergabunglah dengan kami hari ini</p>
+    <!-- Form Section -->
+    <div class="form-section">
+      <h2 class="form-title">Buat Akun Baru</h2>
+      <p class="form-subtitle">Bergabunglah dengan kami hari ini</p>
 
-    <form class="register-form" (submit)="register($event)">
-      <div class="form-group">
-        <label for="username">Username</label>
-        <div class="input-container">
-          <span class="input-icon">👤</span>
-          <input
-            type="text"
-            id="username"
-            class="form-input"
-            [(ngModel)]="username"
-            name="username"
-            placeholder="Pilih username"
-            required
-          />
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="password">Password</label>
-        <div class="input-container">
-          <span class="input-icon">🔒</span>
-          <input
-            type="password"
-            id="password"
-            class="form-input"
-            [(ngModel)]="password"
-            name="password"
-            placeholder="Buat password"
-            (input)="onPasswordInput()"
-            required
-          />
-        </div>
-        <div class="password-strength" *ngIf="password">
-          <div class="strength-bar">
-            <div class="strength-fill" [class]="getPasswordStrength()"></div>
-          </div>
-          <div class="strength-text">
-            Kekuatan password: {{ getPasswordStrength() | titlecase }}
+      <form class="register-form" (submit)="register($event)">
+        <!-- Username -->
+        <div class="input-group">
+          <div class="input-with-icon">
+            <span class="input-icon">👤</span>
+            <input
+              type="text"
+              id="username"
+              class="form-input"
+              [(ngModel)]="username"
+              name="username"
+              placeholder="Username"
+              required
+            />
           </div>
         </div>
-      </div>
 
-      <div class="form-group">
-        <label for="confirmPassword">Konfirmasi Password</label>
-        <div class="input-container">
-          <span class="input-icon">✅</span>
-          <input
-            type="password"
-            id="confirmPassword"
-            class="form-input"
-            [(ngModel)]="confirmPassword"
-            name="confirmPassword"
-            placeholder="Konfirmasi password Anda"
-            (input)="onPasswordInput()"
-            required
-          />
+        <!-- Password -->
+        <div class="input-group">
+          <div class="input-with-icon">
+            <span class="input-icon">🔒</span>
+            <input
+              type="password"
+              id="password"
+              class="form-input"
+              [(ngModel)]="password"
+              name="password"
+              placeholder="Password"
+              (input)="onPasswordInput()"
+              required
+            />
+          </div>
+
+          <!-- Password Strength Indicator -->
+          <div class="password-strength" *ngIf="password">
+            <div class="strength-label">Kekuatan: {{ getPasswordStrengthText() }}</div>
+            <div class="strength-bar">
+              <div
+                class="strength-fill"
+                [class]="getPasswordStrength()"
+                [style.width]="passwordStrengthWidth"
+              ></div>
+            </div>
+          </div>
         </div>
-        <div class="password-match" [class]="getPasswordMatchClass()">
-          <span class="match-icon">
-            {{
-              getPasswordMatchClass() === 'match'
-                ? '✓'
-                : getPasswordMatchClass() === 'mismatch'
-                ? '✗'
-                : ''
-            }}
-          </span>
-          {{ getPasswordMatchText() }}
+
+        <!-- Confirm Password -->
+        <div class="input-group">
+          <div class="input-with-icon">
+            <span class="input-icon">✅</span>
+            <input
+              type="password"
+              id="confirmPassword"
+              class="form-input"
+              [(ngModel)]="confirmPassword"
+              name="confirmPassword"
+              placeholder="Konfirmasi Password"
+              (input)="onPasswordInput()"
+              required
+            />
+          </div>
+
+          <!-- Password Match Indicator -->
+          <div class="password-match" *ngIf="confirmPassword">
+            <span class="match-icon">
+              {{ password === confirmPassword ? '✓' : '✗' }}
+            </span>
+            <span class="match-text">
+              {{ password === confirmPassword ? 'Password cocok' : 'Password tidak cocok' }}
+            </span>
+          </div>
         </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          class="btn-register"
+          [class.disabled]="!isFormValid()"
+          [disabled]="!isFormValid()"
+        >
+          <span class="btn-text">Buat Akun</span>
+          <span class="btn-icon">🎉</span>
+        </button>
+      </form>
+
+      <!-- Login Link -->
+      <div class="footer-links">
+        <p class="login-text">
+          Sudah punya akun?
+          <a (click)="goToLogin()" class="login-link"> Masuk di sini </a>
+        </p>
       </div>
-
-      <button
-        type="submit"
-        class="btn-register"
-        [class.btn-disabled]="!isFormValid()"
-        [disabled]="!isFormValid()"
-      >
-        <span class="btn-text">Buat Akun</span>
-        <span class="btn-icon">🎉</span>
-      </button>
-    </form>
-
-    <div class="text-center mt-3">
-      <p>
-        Sudah punya akun?
-        <a (click)="goToLogin()" class="link">
-          <span>Masuk di sini</span>
-          <span class="link-arrow">↗</span>
-        </a>
-      </p>
     </div>
   </div>
 </div>
