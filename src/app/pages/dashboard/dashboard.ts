@@ -1,27 +1,24 @@
-// src/app/pages/dashboard/dashboard.ts
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router'; // Tambahkan RouterModule
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule], // Masukkan RouterModule di sini
+  imports: [CommonModule, RouterModule],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css'],
 })
 export class Dashboard implements OnInit {
   currentUser: any = null;
 
-  // Data Statistik
   stats = signal([
     { label: 'Revenue', value: '$24,500', color: 'blue' },
     { label: 'Orders', value: '450', color: 'green' },
     { label: 'Visitors', value: '12,000', color: 'orange' },
   ]);
 
-  // Data Aktivitas
   activities = signal([
     { id: 1, task: 'Server Update', time: '2 mins ago', status: 'Done' },
     { id: 2, task: 'New User Registered', time: '1 hour ago', status: 'Process' },
@@ -41,7 +38,6 @@ export class Dashboard implements OnInit {
     }
   }
 
-  // Logika Upload Foto
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {

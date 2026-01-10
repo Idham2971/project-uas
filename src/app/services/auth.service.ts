@@ -5,8 +5,8 @@ export interface User {
   password?: string;
   role: string;
   photoUrl?: string | null;
-  address?: string | null; // Field Baru
-  gender?: string | null; // Field Baru
+  address?: string | null;
+  gender?: string | null;
 }
 
 @Injectable({
@@ -23,7 +23,7 @@ export class AuthService {
     if (users.some((u: User) => u.username === username)) {
       return false;
     }
-    // Inisialisasi user dengan field baru kosong
+
     const newUser: User = {
       username,
       password: pass,
@@ -32,6 +32,7 @@ export class AuthService {
       address: null,
       gender: null,
     };
+
     users.push(newUser);
     localStorage.setItem(this.usersKey, JSON.stringify(users));
     return true;
@@ -61,28 +62,25 @@ export class AuthService {
     return usersStr ? JSON.parse(usersStr) : [];
   }
 
-  // Method baru: Update Data Profil Lengkap
+  // Update Data Profil Lengkap
   updateUserProfile(updatedData: Partial<User>): void {
     const currentUser = this.getCurrentUser();
     if (currentUser) {
-      // 1. Gabungkan data lama dengan data baru
+      // 1. Update sesi login saat ini
       const newUserState = { ...currentUser, ...updatedData };
-
-      // 2. Simpan di session (currentUser)
       localStorage.setItem(this.currentUserKey, JSON.stringify(newUserState));
 
-      // 3. Simpan di database (users array)
+      // 2. Update database permanen (array users)
       const users = this.getUsers();
       const userIndex = users.findIndex((u: User) => u.username === currentUser.username);
       if (userIndex !== -1) {
-        // Kita merge juga di database agar password tidak hilang jika updatedData tidak bawa password
         users[userIndex] = { ...users[userIndex], ...updatedData };
         localStorage.setItem(this.usersKey, JSON.stringify(users));
       }
     }
   }
 
-  // Method lama (bisa tetap dipakai atau diganti logicnya pakai updateUserProfile)
+  // Update Foto Profil (Helper)
   updateProfilePhoto(photoBase64: string): void {
     this.updateUserProfile({ photoUrl: photoBase64 });
   }

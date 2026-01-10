@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './component/login/login.component';
 import { RegisterComponent } from './component/register/register.component';
 import { Dashboard } from './pages/dashboard/dashboard';
-import { ProfileComponent } from './pages/profile/profile.component'; // Import Baru
+import { ProfileComponent } from './pages/profile/profile.component';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -15,7 +15,7 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
-    path: 'profile', // Route Baru
+    path: 'profile',
     component: ProfileComponent,
     canActivate: [authGuard],
   },

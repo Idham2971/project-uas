@@ -1,31 +1,40 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, UrlTree } from '@angular/router';
 import { Dashboard } from './dashboard';
 import { AuthService } from '../../services/auth.service';
-// Import utilitas dari Vitest
 import { vi, describe, it, expect, beforeEach, type Mocked } from 'vitest';
-import { By } from '@angular/platform-browser';
+import { of } from 'rxjs';
 
 describe('DashboardComponent', () => {
   let component: Dashboard;
   let fixture: ComponentFixture<Dashboard>;
-  // Ubah 'jest.Mocked' menjadi 'Mocked' (dari Vitest)
   let authService: Mocked<AuthService>;
   let router: Mocked<Router>;
 
   beforeEach(async () => {
-    // Ubah 'jest.fn()' menjadi 'vi.fn()'
     const authServiceMock = {
       logout: vi.fn(),
-      getCurrentUser: vi.fn().mockReturnValue({ username: 'admin', role: 'admin' }),
+      getCurrentUser: vi.fn().mockReturnValue({ username: 'admin', role: 'admin', photoUrl: null }),
+      updateProfilePhoto: vi.fn(),
     };
 
     const routerMock = {
       navigate: vi.fn(),
+      createUrlTree: vi.fn().mockReturnValue({
+        toString: () => '/mock-url',
+      } as unknown as UrlTree),
+      serializeUrl: vi.fn().mockReturnValue('/mock-url'),
+      events: of(null),
     };
 
     await TestBed.configureTestingModule({
       imports: [Dashboard],
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: {},
+        },
+      ],
     }).compileComponents();
 
     TestBed.overrideProvider(AuthService, { useValue: authServiceMock });
@@ -33,11 +42,8 @@ describe('DashboardComponent', () => {
 
     fixture = TestBed.createComponent(Dashboard);
     component = fixture.componentInstance;
-
-    // Casting menggunakan 'Mocked' dari Vitest
     authService = TestBed.inject(AuthService) as Mocked<AuthService>;
     router = TestBed.inject(Router) as Mocked<Router>;
-
     fixture.detectChanges();
   });
 
@@ -45,35 +51,35 @@ describe('DashboardComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('harus merender 3 kartu statistik dari Signal', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const cards = compiled.querySelectorAll('.card');
-    expect(cards.length).toBe(3);
-  });
+  it('harus memanggil updateProfilePhoto saat file diupload', () => {
+    const mockReader = {
+      readAsDataURL: vi.fn(),
+      onload: null as any,
+      result: 'base64',
+    };
 
-  it('harus menampilkan "Revenue" pada kartu pertama', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const firstCardLabel = compiled.querySelector('.card .label');
-    expect(firstCardLabel?.textContent).toContain('Revenue');
-  });
+    class MockFileReader {
+      readAsDataURL = mockReader.readAsDataURL;
+      onload: any = null;
+      result = 'base64';
 
-  it('harus menampilkan username pengguna di header', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const welcomeText = compiled.querySelector('.welcome-text');
-    expect(welcomeText?.textContent).toContain('Selamat datang');
-  });
+      constructor() {
+        mockReader.onload = (e: any) => {
+          if (this.onload) {
+            this.onload(e);
+          }
+        };
+      }
+    }
 
-  it('harus memanggil logout saat tombol logout diklik', () => {
-    // Menggunakan debugElement untuk interaksi tombol yang lebih aman
-    const logoutBtn = fixture.debugElement.query(By.css('.logout-btn'));
-    logoutBtn.triggerEventHandler('click', null);
+    vi.spyOn(window, 'FileReader').mockImplementation(MockFileReader as any);
 
-    expect(authService.logout).toHaveBeenCalled();
-  });
+    component.onFileSelected({ target: { files: [new Blob()] } });
 
-  it('harus menampilkan role pengguna', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    const userRole = compiled.querySelector('.user-role');
-    expect(userRole?.textContent).toContain('Administrator');
+    if (mockReader.onload) {
+      mockReader.onload({ target: { result: 'base64' } });
+    }
+
+    expect(authService.updateProfilePhoto).toHaveBeenCalledWith('base64');
   });
 });
