@@ -7,6 +7,7 @@ export interface User {
   photoUrl?: string | null;
   address?: string | null;
   gender?: string | null;
+  age?: number | null;
 }
 
 @Injectable({
@@ -31,6 +32,7 @@ export class AuthService {
       photoUrl: null,
       address: null,
       gender: null,
+      age: null,
     };
 
     users.push(newUser);

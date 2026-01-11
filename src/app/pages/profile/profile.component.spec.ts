@@ -11,13 +11,14 @@ describe('ProfileComponent', () => {
   let authService: Mocked<AuthService>;
   let router: Mocked<Router>;
 
-  // Mock User Data
+  // Mock User Data (Tambahkan 'age')
   const mockUser = {
     username: 'tom',
     role: 'user',
     photoUrl: null,
     address: 'Jl. Lama No. 1',
     gender: 'Laki-laki',
+    age: 25, // <--- Data awal usia
   };
 
   beforeEach(async () => {
@@ -59,9 +60,11 @@ describe('ProfileComponent', () => {
   it('harus masuk mode edit saat tombol Edit ditekan', () => {
     component.enableEdit();
     expect(component.isEditing).toBe(true);
+
     // Data form harus terisi data user saat ini
     expect(component.editData.address).toBe('Jl. Lama No. 1');
     expect(component.editData.gender).toBe('Laki-laki');
+    expect(component.editData.age).toBe(25); // <--- Cek apakah usia ikut masuk
   });
 
   it('harus menyimpan data profil baru', () => {
@@ -71,17 +74,18 @@ describe('ProfileComponent', () => {
     // 2. Ubah data di form
     component.editData.address = 'Jl. Baru No. 99';
     component.editData.gender = 'Perempuan';
+    component.editData.age = 30; // <--- Ubah usia
 
     // 3. Simpan
-    // Mock window.alert agar tidak mengganggu test
     vi.spyOn(window, 'alert').mockImplementation(() => {});
 
     component.saveProfile();
 
-    // 4. Assert service dipanggil
+    // 4. Assert service dipanggil dengan data LENGKAP (termasuk age)
     expect(authService.updateUserProfile).toHaveBeenCalledWith({
       address: 'Jl. Baru No. 99',
       gender: 'Perempuan',
+      age: 30, // <--- Pastikan ini ada di expect
     });
 
     // 5. Kembali ke mode view

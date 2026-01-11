@@ -8,7 +8,6 @@
           alt="Profile Photo"
         />
         <div class="overlay">
-          <!-- Logo upload dengan panah yang lebih jelas -->
           <div class="upload-icon">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -29,6 +28,7 @@
           </div>
         </div>
       </div>
+
       <input
         #fileInput
         type="file"
@@ -50,13 +50,20 @@
       </div>
 
       <div class="detail-item">
+        <label>Usia</label>
+        <p class="value">{{ user?.age ? user?.age + ' Tahun' : '-' }}</p>
+      </div>
+
+      <div class="detail-item">
         <label>Alamat</label>
         <p class="value">{{ user?.address || 'Belum ada alamat' }}</p>
       </div>
 
       <div class="action-buttons">
-        <button class="btn-edit" (click)="enableEdit()">Edit Profil</button>
-        <button class="btn-back" (click)="goBack()">Kembali ke Dashboard</button>
+        <button class="btn-edit" type="button" (click)="enableEdit($event)">Edit Profil</button>
+        <button class="btn-back" type="button" (click)="goBack($event)">
+          Kembali ke Dashboard
+        </button>
       </div>
     </div>
 
@@ -76,6 +83,17 @@
       </div>
 
       <div class="form-group">
+        <label>Usia</label>
+        <input
+          type="number"
+          [(ngModel)]="editData.age"
+          class="form-input"
+          placeholder="Contoh: 25"
+          min="1"
+        />
+      </div>
+
+      <div class="form-group">
         <label>Alamat Lengkap</label>
         <textarea
           [(ngModel)]="editData.address"
@@ -86,8 +104,8 @@
       </div>
 
       <div class="action-buttons">
-        <button class="btn-save" (click)="saveProfile()">Simpan</button>
-        <button class="btn-cancel" (click)="cancelEdit()">Batal</button>
+        <button class="btn-save" type="button" (click)="saveProfile()">Simpan</button>
+        <button class="btn-cancel" type="button" (click)="cancelEdit()">Batal</button>
       </div>
     </div>
   </div>

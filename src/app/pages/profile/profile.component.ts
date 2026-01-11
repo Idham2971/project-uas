@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService, User } from '../../services/auth.service';
+import { AuthService, User } from '../../services/auth.service'; // Sesuaikan path jika perlu
 
 @Component({
   selector: 'app-profile',
@@ -13,14 +13,13 @@ import { AuthService, User } from '../../services/auth.service';
 })
 export class ProfileComponent implements OnInit {
   user: User | null = null;
-
-  // State untuk mode edit
   isEditing = false;
 
-  // Model untuk form edit (terpisah dari data asli supaya bisa cancel)
+  // Model data untuk form edit
   editData: Partial<User> = {
     address: '',
     gender: '',
+    age: null,
   };
 
   constructor(private authService: AuthService, private router: Router) {}
@@ -31,43 +30,50 @@ export class ProfileComponent implements OnInit {
 
   loadUser() {
     this.user = this.authService.getCurrentUser();
+
+    // Validasi: Jika user null (localStorage kosong/terhapus), baru redirect ke login
     if (!this.user) {
+      console.warn('User data not found, redirecting to login...');
       this.router.navigate(['/login']);
     }
   }
 
-  // Masuk ke Mode Edit
-  enableEdit() {
+  // FIXED: Tambahkan parameter event untuk stop reload
+  enableEdit(event?: Event) {
+    if (event) {
+      event.preventDefault(); // Mencegah reload halaman
+      event.stopPropagation(); // Mencegah klik tembus
+    }
+
     if (this.user) {
       this.isEditing = true;
-      // Salin data saat ini ke form model
+      // Copy data user ke form edit
       this.editData = {
         address: this.user.address || '',
         gender: this.user.gender || '',
+        age: this.user.age || null,
       };
     }
   }
 
-  // Batal Edit
   cancelEdit() {
     this.isEditing = false;
   }
 
-  // Simpan Perubahan
   saveProfile() {
     if (this.user) {
       this.authService.updateUserProfile({
         address: this.editData.address,
         gender: this.editData.gender,
+        age: this.editData.age,
       });
 
       this.isEditing = false;
-      this.loadUser(); // Refresh tampilan
+      this.loadUser(); // Refresh data di layar
       alert('Profil berhasil diperbarui!');
     }
   }
 
-  // Ganti Foto (Reuse logic dari dashboard)
   onPhotoSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
@@ -80,7 +86,12 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  goBack() {
+  // FIXED: Tambahkan parameter event untuk stop reload
+  goBack(event?: Event) {
+    if (event) {
+      event.preventDefault(); // KUNCI UTAMA: Stop browser reload
+      event.stopPropagation();
+    }
     this.router.navigate(['/dashboard']);
   }
 }
