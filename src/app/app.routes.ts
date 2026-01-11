@@ -21,7 +21,9 @@ export const routes: Routes = [
     component: Dashboard,
     canActivate: [authGuard],
   },
-  { path: 'products', component: ProductsComponent },
+  { path: 'products', 
+    component: ProductsComponent,
+    canActivate: [authGuard],},
 
   {
     path: 'profile', 
@@ -31,10 +33,4 @@ export const routes: Routes = [
 
   // Wildcard: Paling bawah, untuk menangkap alamat ngawur
   { path: '**', redirectTo: 'login' },
-
-  // Tambahkan di app.routes.ts
-  { 
-  path: 'produk', 
-  component: Produk // Pastikan komponen ini sudah di-import di bagian atas
-  },
 ];
