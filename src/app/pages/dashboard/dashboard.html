@@ -4,26 +4,51 @@
       <h1>Dashboard</h1>
       <p class="welcome-text">Selamat datang, {{ getCurrentUser()?.username || 'Pengguna' }}</p>
     </div>
-    
+
     <div class="header-right">
       <div class="user-info">
         <div class="profile-section">
-          <img 
-            [src]="getCurrentUser()?.photoUrl || 'https://via.placeholder.com/40'" 
-            class="profile-img" 
+          <img
+            [src]="getCurrentUser()?.photoUrl || 'https://via.placeholder.com/40'"
+            class="profile-img"
             alt="Profile"
-            (click)="fileInput.click()" 
+            (click)="fileInput.click()"
             title="Klik untuk ganti foto"
-          >
-          <input #fileInput type="file" (change)="onFileSelected($event)" accept="image/*" style="display: none">
+          />
+          <input
+            #fileInput
+            type="file"
+            (change)="onFileSelected($event)"
+            accept="image/*"
+            style="display: none"
+          />
         </div>
 
-        <span class="user-role">{{
-          getCurrentUser()?.role === 'admin' ? 'Administrator' : 'User'
-        }}</span>
-        
+        <div
+          class="user-details"
+          style="display: flex; flex-direction: column; align-items: flex-end; margin-right: 8px"
+        >
+          <span class="user-role">{{
+            getCurrentUser()?.role === 'admin' ? 'Administrator' : 'User'
+          }}</span>
+          <a
+            routerLink="/profile"
+            style="
+              font-size: 12px;
+              color: #4f46e5;
+              text-decoration: none;
+              margin-top: 2px;
+              cursor: pointer;
+              font-weight: 500;
+            "
+          >
+            Edit Profil
+          </a>
+        </div>
+
         <button class="logout-btn" (click)="logout()">
-          <span class="logout-icon">🚪</span> Logout
+          <span class="logout-icon">🚪</span>
+          Logout
         </button>
       </div>
     </div>
@@ -43,14 +68,20 @@
       <h3>Recent Activity</h3>
       <table class="modern-table">
         <thead>
-          <tr><th>Task</th><th>Time</th><th>Status</th></tr>
+          <tr>
+            <th>Task</th>
+            <th>Time</th>
+            <th>Status</th>
+          </tr>
         </thead>
         <tbody>
           @for (act of activities(); track act.id) {
           <tr>
             <td>{{ act.task }}</td>
             <td>{{ act.time }}</td>
-            <td><span class="status-pill">{{ act.status }}</span></td>
+            <td>
+              <span class="status-pill">{{ act.status }}</span>
+            </td>
           </tr>
           }
         </tbody>

@@ -1,5 +1,15 @@
 import { Injectable } from '@angular/core';
 
+export interface User {
+  username: string;
+  password?: string;
+  role: string;
+  photoUrl?: string | null;
+  address?: string | null;
+  gender?: string | null;
+  age?: number | null;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -11,11 +21,20 @@ export class AuthService {
 
   register(username: string, pass: string): boolean {
     const users = this.getUsers();
-    if (users.some((u: any) => u.username === username)) {
+    if (users.some((u: User) => u.username === username)) {
       return false;
     }
-    // Tambah user baru dengan field photoUrl default null
-    const newUser = { username, password: pass, role: 'user', photoUrl: null }; 
+
+    const newUser: User = {
+      username,
+      password: pass,
+      role: 'user',
+      photoUrl: null,
+      address: null,
+      gender: null,
+      age: null,
+    };
+
     users.push(newUser);
     localStorage.setItem(this.usersKey, JSON.stringify(users));
     return true;
@@ -23,7 +42,7 @@ export class AuthService {
 
   login(username: string, pass: string): boolean {
     const users = this.getUsers();
-    const user = users.find((u: any) => u.username === username && u.password === pass);
+    const user = users.find((u: User) => u.username === username && u.password === pass);
     if (user) {
       localStorage.setItem(this.currentUserKey, JSON.stringify(user));
       return true;
@@ -35,31 +54,36 @@ export class AuthService {
     localStorage.removeItem(this.currentUserKey);
   }
 
-  getCurrentUser() {
+  getCurrentUser(): User | null {
     const userStr = localStorage.getItem(this.currentUserKey);
     return userStr ? JSON.parse(userStr) : null;
   }
 
-  getUsers() {
+  getUsers(): User[] {
     const usersStr = localStorage.getItem(this.usersKey);
     return usersStr ? JSON.parse(usersStr) : [];
   }
 
-  // Update foto profil (Base64)
-  updateProfilePhoto(photoBase64: string): void {
+  // Update Data Profil Lengkap
+  updateUserProfile(updatedData: Partial<User>): void {
     const currentUser = this.getCurrentUser();
     if (currentUser) {
-      // 1. Update sesi saat ini
-      currentUser.photoUrl = photoBase64;
-      localStorage.setItem(this.currentUserKey, JSON.stringify(currentUser));
+      // 1. Update sesi login saat ini
+      const newUserState = { ...currentUser, ...updatedData };
+      localStorage.setItem(this.currentUserKey, JSON.stringify(newUserState));
 
-      // 2. Update database permanen
+      // 2. Update database permanen (array users)
       const users = this.getUsers();
-      const userIndex = users.findIndex((u: any) => u.username === currentUser.username);
+      const userIndex = users.findIndex((u: User) => u.username === currentUser.username);
       if (userIndex !== -1) {
-        users[userIndex].photoUrl = photoBase64;
+        users[userIndex] = { ...users[userIndex], ...updatedData };
         localStorage.setItem(this.usersKey, JSON.stringify(users));
       }
     }
+  }
+
+  // Update Foto Profil (Helper)
+  updateProfilePhoto(photoBase64: string): void {
+    this.updateUserProfile({ photoUrl: photoBase64 });
   }
 }

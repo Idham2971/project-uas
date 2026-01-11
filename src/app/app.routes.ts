@@ -3,23 +3,31 @@ import { ProductsComponent } from './pages/products/products';
 import { LoginComponent } from './component/login/login.component';
 import { RegisterComponent } from './component/register/register.component';
 import { Dashboard } from './pages/dashboard/dashboard';
+import { ProfileComponent } from './pages/profile/profile.component';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
-  // Jika alamat kosong (root), langsung arahkan ke login
+  // Jika alamat kosong, ke login
   { path: '', redirectTo: 'login', pathMatch: 'full' },
 
-  // Halaman Public (Bisa diakses siapa saja)
+  // Halaman Public
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
 
-  // Halaman Private (Hanya bisa diakses jika sudah login)
+  // Halaman Private
   {
     path: 'dashboard',
     component: Dashboard,
-    canActivate: [authGuard], // <--- Pasang satpam di sini
+    canActivate: [authGuard],
   },
   { path: 'products', component: ProductsComponent },
-  // (Opsional) Wildcard: jika user mengetik alamat ngawur, kembalikan ke login
+
+  {
+    path: 'profile', 
+    component: ProfileComponent, 
+    canActivate: [authGuard], 
+  },
+
+  // Wildcard: Paling bawah, untuk menangkap alamat ngawur
   { path: '**', redirectTo: 'login' },
 ];
