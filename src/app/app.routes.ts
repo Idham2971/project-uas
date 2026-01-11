@@ -3,6 +3,7 @@ import { LoginComponent } from './component/login/login.component';
 import { RegisterComponent } from './component/register/register.component';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { authGuard } from './guards/auth.guard';
+import { Produk } from './pages/produk/produk';
 
 export const routes: Routes = [
   // Jika alamat kosong (root), langsung arahkan ke login
@@ -21,4 +22,10 @@ export const routes: Routes = [
 
   // (Opsional) Wildcard: jika user mengetik alamat ngawur, kembalikan ke login
   { path: '**', redirectTo: 'login' },
+
+  // Tambahkan di app.routes.ts
+  { 
+  path: 'produk', 
+  component: Produk // Pastikan komponen ini sudah di-import di bagian atas
+  },
 ];
