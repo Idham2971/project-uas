@@ -4,8 +4,8 @@ import { LoginComponent } from './component/login/login.component';
 import { RegisterComponent } from './component/register/register.component';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { ProfileComponent } from './pages/profile/profile.component';
-
 import { authGuard } from './guards/auth.guard';
+
 export const routes: Routes = [
   // Jika alamat kosong, ke login
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -23,10 +23,11 @@ export const routes: Routes = [
   { path: 'products', component: ProductsComponent },
 
   {
-    path: 'profile', // Alamat URL-nya nanti: /profile
-    component: ProfileComponent, // Komponen yang dipanggil
-    canActivate: [authGuard], // Wajib login
+    path: 'profile', 
+    component: ProfileComponent, 
+    canActivate: [authGuard], 
   },
 
+  // Wildcard: Paling bawah, untuk menangkap alamat ngawur
   { path: '**', redirectTo: 'login' },
 ];

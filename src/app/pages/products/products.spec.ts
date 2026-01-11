@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-// PERBAIKAN DI SINI: Ubah './products.component' menjadi './products'
 import { ProductsComponent } from './products';
 import { Router, ActivatedRoute, UrlTree } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -28,13 +27,13 @@ describe('ProductsComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ProductsComponent],
+      imports: [ProductsComponent], // Standalone component masuk imports
       providers: [
         { provide: AuthService, useValue: authServiceMock },
         { provide: Router, useValue: routerMock },
         {
           provide: ActivatedRoute,
-          useValue: {},
+          useValue: {}, // Mock kosong untuk ActivatedRoute
         },
       ],
     }).compileComponents();
