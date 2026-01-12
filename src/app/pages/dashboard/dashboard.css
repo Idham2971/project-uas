@@ -1,41 +1,155 @@
-.dashboard-container { min-height: 100vh; background: #f8fafc; }
+/* Container Utama */
+.dashboard-container { 
+  min-height: 100vh; 
+  background: #ffffff; /* Putih bersih */
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
 
+/* Header Section */
 .dashboard-header {
-  background: white; padding: 20px 24px; border-bottom: 1px solid #e2e8f0;
-  display: flex; justify-content: space-between; align-items: center;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+  background: white; 
+  padding: 1.5rem 2rem; 
+  border-bottom: 1px solid #f0f0f0;
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center;
 }
 
-.header-left h1 { margin: 0; color: #1e293b; font-size: 1.875rem; font-weight: 700; }
-.welcome-text { margin: 4px 0 0; color: #64748b; font-size: 0.875rem; }
-.header-right .user-info { display: flex; align-items: center; gap: 16px; }
+.header-left h1 { 
+  margin: 0; 
+  color: #121212; 
+  font-size: 1.5rem; 
+  font-weight: 700; 
+  letter-spacing: -0.02em;
+}
 
-/* Profile Picture */
-.profile-section { position: relative; cursor: pointer; display: flex; align-items: center; }
+.welcome-text { 
+  margin: 4px 0 0; 
+  color: #888888; 
+  font-size: 0.85rem; 
+}
+
+/* Profile & User Info */
 .profile-img {
-  width: 40px; height: 40px; border-radius: 50%; object-fit: cover;
-  border: 2px solid #e2e8f0; transition: border-color 0.2s;
+  width: 40px; 
+  height: 40px; 
+  border-radius: 50%; 
+  object-fit: cover;
+  border: 1px solid #e5e5e5; 
+  filter: grayscale(100%); /* Efek monochrome pada foto */
+  transition: all 0.2s ease;
 }
-.profile-img:hover { border-color: #4f46e5; }
 
-.user-role { background: #f1f5f9; padding: 6px 12px; border-radius: 20px; font-size: 0.875rem; color: #475569; font-weight: 500; }
+.profile-img:hover { 
+  border-color: #000000; 
+  filter: grayscale(0%);
+}
+
+.user-role { 
+  background: #f8f8f8; 
+  padding: 4px 12px; 
+  border-radius: 4px; 
+  font-size: 0.75rem; 
+  color: #555555; 
+  font-weight: 600; 
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Logout Button (Monochrome Style) */
 .logout-btn {
-  background: #ef4444; color: white; border: none; padding: 8px 16px;
-  border-radius: 8px; font-size: 0.875rem; font-weight: 500; cursor: pointer;
-  display: flex; align-items: center; gap: 8px;
+  background: #121212; 
+  color: white; 
+  border: none; 
+  padding: 8px 16px;
+  border-radius: 4px; 
+  font-size: 0.85rem; 
+  font-weight: 500; 
+  cursor: pointer;
+  display: flex; 
+  align-items: center; 
+  gap: 8px;
+  transition: opacity 0.2s;
 }
-.logout-btn:hover { background: #dc2626; }
 
-.dashboard-grid { display: flex; flex-direction: column; gap: 24px; padding: 24px; }
-.stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
-.card { padding: 20px; border-radius: 16px; color: white; transition: transform 0.2s; }
-.card:hover { transform: translateY(-5px); }
-.blue { background: #4f46e5; }
-.green { background: #10b981; }
-.orange { background: #f59e0b; }
+.logout-btn:hover { 
+  opacity: 0.8; 
+}
 
-.content-card { background: white; padding: 24px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
-.modern-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
-.modern-table th { text-align: left; color: #64748b; padding: 12px; border-bottom: 1px solid #f1f5f9; }
-.modern-table td { padding: 12px; border-bottom: 1px solid #f1f5f9; }
-.status-pill { background: #f1f5f9; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; }
+/* Dashboard Grid & Cards */
+.dashboard-grid { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 2rem; 
+  padding: 2rem; 
+}
+
+.stats-row { 
+  display: grid; 
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+  gap: 1.5rem; 
+}
+
+/* Card Stats - Menghilangkan warna blue/green/orange */
+.card { 
+  padding: 1.5rem; 
+  border-radius: 8px; 
+  background: white;
+  color: #121212; 
+  border: 1px solid #eeeeee;
+  transition: border-color 0.2s;
+}
+
+.card:hover { 
+  border-color: #121212;
+}
+
+/* Override warna lama menjadi monochrome */
+.card.blue, .card.green, .card.orange {
+  background: white;
+  color: #121212;
+}
+
+.card .label {
+  display: block;
+  font-size: 0.8rem;
+  color: #888888;
+  margin-bottom: 0.5rem;
+}
+
+.card .value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Table Section */
+.content-card { 
+  background: white; 
+  padding: 1.5rem; 
+  border-radius: 8px; 
+  border: 1px solid #eeeeee;
+}
+
+.modern-table th { 
+  text-align: left; 
+  color: #888888; 
+  padding: 1rem; 
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.modern-table td { 
+  padding: 1rem; 
+  border-bottom: 1px solid #f0f0f0; 
+  color: #121212;
+}
+
+.status-pill { 
+  background: #f0f0f0; 
+  padding: 4px 10px; 
+  border-radius: 4px; 
+  font-size: 0.75rem; 
+  color: #555555;
+}
