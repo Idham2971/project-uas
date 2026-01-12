@@ -6,6 +6,7 @@ import { Dashboard } from './pages/dashboard/dashboard';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { authGuard } from './guards/auth.guard';
 import { Produk } from './pages/produk/produk';
+import { AboutComponent } from './pages/about/about';
 
 export const routes: Routes = [
   // Jika alamat kosong, ke login
@@ -28,6 +29,11 @@ export const routes: Routes = [
   {
     path: 'profile', 
     component: ProfileComponent, 
+    canActivate: [authGuard], 
+  },
+  {
+    path: 'about', 
+    component: AboutComponent, 
     canActivate: [authGuard], 
   },
 
